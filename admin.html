@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>파티 관리자 🥔</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --potato-deep: #a9743a; --ink: #4a3620; --ink-soft: #7a6a55;
+    --cream: #f6efe0; --cream-2: #fbf6ea; --line: #ddd0b8; --danger: #c0392b; --ok: #5f9e33;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Jua', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; color: var(--ink);
+    background: var(--cream); -webkit-font-smoothing: antialiased; padding: 24px 16px 80px;
+  }
+  .hand { font-family: 'Gaegu', 'Apple SD Gothic Neo', sans-serif; font-weight: 700; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-family: 'Gaegu', sans-serif; font-weight: 700; color: var(--potato-deep); font-size: 40px; text-align: center; }
+  .sub { text-align: center; color: var(--ink-soft); margin-bottom: 20px; }
+  [hidden] { display: none !important; }
+
+  .card { background: var(--cream-2); border: 2.5px solid var(--ink); border-radius: 20px; padding: 20px; margin-bottom: 16px; }
+  label { display: block; font-size: 15px; color: var(--ink); margin: 12px 0 5px; }
+  input, textarea, .val { width: 100%; padding: 11px 13px; border-radius: 12px; font-size: 15px; font-family: inherit; background: #fff; border: 2.5px solid var(--line); color: var(--ink); }
+  input:focus, textarea:focus { outline: none; border-color: var(--potato-deep); }
+  textarea { resize: vertical; min-height: 64px; }
+  .hint { font-size: 12px; color: var(--ink-soft); margin-top: 3px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  button { font-family: 'Gaegu', sans-serif; font-weight: 700; cursor: pointer; border-radius: 12px; border: 2.5px solid var(--ink); font-size: 17px; padding: 11px 16px; }
+  .btn-primary { background: var(--potato-deep); color: #fff; }
+  .btn-ghost { background: #fff; color: var(--ink); }
+  .btn-danger { background: #fff; color: var(--danger); border-color: var(--danger); }
+  .btn-sm { font-size: 14px; padding: 7px 12px; }
+  .btnrow { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+
+  .msg { min-height: 20px; margin-top: 10px; font-size: 15px; }
+  .msg.ok { color: var(--ok); } .msg.err { color: var(--danger); }
+
+  .ev { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border: 2.5px solid var(--line); border-radius: 14px; background: #fff; margin-top: 10px; flex-wrap: wrap; }
+  .ev .meta { font-size: 13px; color: var(--ink-soft); }
+  .ev .name { font-size: 17px; }
+  .ev .acts { display: flex; gap: 6px; flex-wrap: wrap; }
+  .slugtag { font-family: 'Gaegu', sans-serif; background: var(--cream); border: 1.5px solid var(--line); border-radius: 8px; padding: 1px 7px; font-size: 13px; }
+  .rsvp-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; border: 2px solid var(--line); border-radius: 12px; background: #fff; margin-top: 8px; }
+  a { color: var(--potato-deep); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="hand">파티 관리자 🥔</h1>
+  <div class="sub hand">회차 생성 · 수정 · 삭제 · 신청자 관리</div>
+
+  <!-- LOGIN -->
+  <div class="card" id="login-card">
+    <label for="pw">관리자 비밀번호</label>
+    <input type="password" id="pw" placeholder="비밀번호를 입력하세요" />
+    <div class="btnrow"><button class="btn-primary hand" id="login-btn">입장하기</button></div>
+    <div class="msg hand" id="login-msg"></div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" hidden>
+    <div class="btnrow" style="justify-content:space-between;margin-bottom:12px">
+      <button class="btn-primary hand" id="new-btn">+ 새 회차 만들기</button>
+      <button class="btn-ghost hand btn-sm" id="logout-btn">로그아웃</button>
+    </div>
+
+    <!-- EVENT LIST -->
+    <div class="card" id="list-card">
+      <div class="hand" style="font-size:22px;color:var(--potato-deep);margin-bottom:6px">회차 목록</div>
+      <div id="events"></div>
+    </div>
+
+    <!-- EVENT FORM -->
+    <div class="card" id="form-card" hidden>
+      <div class="hand" style="font-size:22px;color:var(--potato-deep)" id="form-title">새 회차</div>
+      <input type="hidden" id="f-id" />
+      <div class="row2">
+        <div><label>슬러그 (URL) *</label><input id="f-slug" placeholder="potato-kimjang" /><div class="hint">영문·숫자·하이픈. /e/슬러그 로 열려요</div></div>
+        <div><label>제목 *</label><input id="f-title" placeholder="감자 김장 파티" /></div>
+      </div>
+      <label>상단 배지</label><input id="f-badge" placeholder="제1회 캐릿 오프라인 모임" />
+      <label>환영 문구 (한 줄에 하나씩)</label>
+      <textarea id="f-welcome" placeholder="감자 김장하실 분.. (알레르기 없으셔야 함!)&#10;모여서 근황 얘기 나눌 분"></textarea>
+      <div class="row2">
+        <div><label>시작 일시</label><input type="datetime-local" id="f-starts" /><div class="hint">카운트다운 기준 (KST)</div></div>
+        <div><label>신청 마감</label><input type="datetime-local" id="f-deadline" /><div class="hint">지나면 폼 닫힘 (KST)</div></div>
+      </div>
+      <label>표시용 일시 문구</label><input id="f-datetext" placeholder="7월 10일(금) 오후 7시 30분" />
+      <div class="row2">
+        <div><label>장소</label><input id="f-location" placeholder="서울시 마포구 공덕역" /></div>
+        <div><label>장소 부가설명</label><input id="f-locnote" placeholder="*세부 장소 개별 안내" /></div>
+      </div>
+      <div class="row2">
+        <div><label>참가비</label><input id="f-fee" placeholder="2만 원" /></div>
+        <div><label>하단 브랜드</label><input id="f-brand" placeholder="journey" /></div>
+      </div>
+      <label>문의 문구</label><input id="f-contact" placeholder="전여정에게 문의해주세요!" />
+      <label>파티 설명 (선택)</label><textarea id="f-desc" placeholder="파티 소개 문단"></textarea>
+      <label>주의사항 (한 줄에 하나씩, 선택)</label><textarea id="f-notice" placeholder="만 19세 이상&#10;입장 마감 20:30"></textarea>
+      <div class="btnrow">
+        <button class="btn-primary hand" id="save-btn">저장하기</button>
+        <button class="btn-ghost hand" id="cancel-btn">취소</button>
+        <a id="preview-link" class="hand btn-ghost btn-sm" style="text-decoration:none;padding:9px 14px;border:2.5px solid var(--ink);border-radius:12px" href="#" target="_blank" hidden>페이지 미리보기 ↗</a>
+      </div>
+      <div class="msg hand" id="form-msg"></div>
+    </div>
+
+    <!-- RSVP PANEL -->
+    <div class="card" id="rsvp-card" hidden>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div class="hand" style="font-size:22px;color:var(--potato-deep)" id="rsvp-title">신청자</div>
+        <div class="btnrow" style="margin:0">
+          <button class="btn-ghost hand btn-sm" id="csv-btn">CSV 내보내기</button>
+          <button class="btn-ghost hand btn-sm" id="rsvp-close">닫기</button>
+        </div>
+      </div>
+      <div id="rsvps"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let PW = sessionStorage.getItem('adminpw') || '';
+  let currentRsvpEvent = null;
+
+  const $ = id => document.getElementById(id);
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  async function api(op, extra) {
+    const res = await fetch('/api/admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-password': PW },
+      body: JSON.stringify(Object.assign({ op }, extra || {})),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || '오류가 발생했어요.');
+    return data;
+  }
+
+  // KST datetime helpers
+  function toLocalInput(iso) {
+    if (!iso) return '';
+    try { const s = new Date(iso).toLocaleString('sv-SE', { timeZone: 'Asia/Seoul' }); return s.slice(0,16).replace(' ','T'); }
+    catch { return ''; }
+  }
+  function fromLocalInput(v) { return v ? v + ':00+09:00' : null; }
+
+  // ---- Login ----
+  $('login-btn').addEventListener('click', doLogin);
+  $('pw').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  async function doLogin() {
+    PW = $('pw').value;
+    $('login-msg').textContent = '';
+    try {
+      await api('list');
+      sessionStorage.setItem('adminpw', PW);
+      $('login-card').hidden = true; $('app').hidden = false;
+      loadEvents();
+    } catch (e) {
+      $('login-msg').className = 'msg hand err'; $('login-msg').textContent = e.message;
+    }
+  }
+  $('logout-btn').addEventListener('click', () => { sessionStorage.removeItem('adminpw'); location.reload(); });
+
+  // ---- Events ----
+  async function loadEvents() {
+    const box = $('events'); box.innerHTML = '불러오는 중…';
+    try {
+      const { events } = await api('list');
+      if (!events.length) { box.innerHTML = '<div class="hint">아직 회차가 없어요. "새 회차 만들기"로 시작하세요.</div>'; return; }
+      box.innerHTML = events.map(ev =>
+        '<div class="ev"><div><div class="name">' + esc(ev.title) +
+        ' <span class="slugtag">' + esc(ev.slug) + '</span></div>' +
+        '<div class="meta">' + esc(ev.date_text || '') + '</div></div>' +
+        '<div class="acts">' +
+          '<a class="btn-ghost hand btn-sm" style="text-decoration:none;border:2.5px solid var(--ink);border-radius:12px" href="/e/' + encodeURIComponent(ev.slug) + '" target="_blank">열기 ↗</a>' +
+          '<button class="btn-ghost hand btn-sm" onclick="editEvent(' + ev.id + ')">수정</button>' +
+          '<button class="btn-ghost hand btn-sm" onclick="manageRsvps(' + ev.id + ",'" + esc(ev.slug) + '\')">신청자</button>' +
+          '<button class="btn-danger hand btn-sm" onclick="delEvent(' + ev.id + ",'" + esc(ev.title) + '\')">삭제</button>' +
+        '</div></div>'
+      ).join('');
+    } catch (e) { box.innerHTML = '<div class="msg err">' + esc(e.message) + '</div>'; }
+  }
+
+  function showForm(ev) {
+    $('form-card').hidden = false; $('rsvp-card').hidden = true;
+    $('form-msg').textContent = '';
+    $('f-id').value = ev ? ev.id : '';
+    $('f-slug').value = ev ? (ev.slug||'') : '';
+    $('f-title').value = ev ? (ev.title||'') : '';
+    $('f-badge').value = ev ? (ev.badge||'') : '';
+    $('f-welcome').value = ev && Array.isArray(ev.welcome) ? ev.welcome.join('\n') : '';
+    $('f-starts').value = ev ? toLocalInput(ev.starts_at) : '';
+    $('f-deadline').value = ev ? toLocalInput(ev.deadline) : '';
+    $('f-datetext').value = ev ? (ev.date_text||'') : '';
+    $('f-location').value = ev ? (ev.location||'') : '';
+    $('f-locnote').value = ev ? (ev.location_note||'') : '';
+    $('f-fee').value = ev ? (ev.fee||'') : '';
+    $('f-brand').value = ev ? (ev.brand||'') : 'journey';
+    $('f-contact').value = ev ? (ev.contact||'') : '';
+    $('f-desc').value = ev ? (ev.description||'') : '';
+    $('f-notice').value = ev ? (ev.notice||'') : '';
+    $('form-title').textContent = ev ? ('회차 수정 — ' + (ev.title||'')) : '새 회차';
+    const pl = $('preview-link');
+    if (ev && ev.slug) { pl.hidden = false; pl.href = '/e/' + encodeURIComponent(ev.slug); } else { pl.hidden = true; }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  $('new-btn').addEventListener('click', () => showForm(null));
+  $('cancel-btn').addEventListener('click', () => { $('form-card').hidden = true; });
+
+  window.editEvent = async function (id) {
+    try { const { event } = await api('get', { id }); showForm(event); }
+    catch (e) { alert(e.message); }
+  };
+
+  $('save-btn').addEventListener('click', async function () {
+    const id = $('f-id').value;
+    const welcome = $('f-welcome').value.split('\n').map(s => s.trim()).filter(Boolean);
+    const payload = {
+      slug: $('f-slug').value.trim(),
+      title: $('f-title').value.trim(),
+      badge: $('f-badge').value.trim(),
+      welcome: welcome,
+      starts_at: fromLocalInput($('f-starts').value),
+      deadline: fromLocalInput($('f-deadline').value),
+      date_text: $('f-datetext').value.trim(),
+      location: $('f-location').value.trim(),
+      location_note: $('f-locnote').value.trim(),
+      fee: $('f-fee').value.trim(),
+      brand: $('f-brand').value.trim() || 'journey',
+      contact: $('f-contact').value.trim(),
+      description: $('f-desc').value.trim(),
+      notice: $('f-notice').value.trim(),
+    };
+    if (!payload.slug || !payload.title) { $('form-msg').className = 'msg hand err'; $('form-msg').textContent = '슬러그와 제목은 필수예요.'; return; }
+    try {
+      if (id) await api('update', Object.assign({ id: Number(id) }, payload));
+      else await api('create', payload);
+      $('form-msg').className = 'msg hand ok'; $('form-msg').textContent = '저장됐어요! 🥔';
+      await loadEvents();
+      setTimeout(() => { $('form-card').hidden = true; }, 700);
+    } catch (e) { $('form-msg').className = 'msg hand err'; $('form-msg').textContent = e.message; }
+  });
+
+  window.delEvent = async function (id, title) {
+    if (!confirm('"' + title + '" 회차를 삭제할까요?\n신청자 명단도 함께 삭제됩니다. 되돌릴 수 없어요.')) return;
+    try { await api('delete', { id }); await loadEvents(); }
+    catch (e) { alert(e.message); }
+  };
+
+  // ---- RSVPs ----
+  window.manageRsvps = async function (eventId, slug) {
+    currentRsvpEvent = { id: eventId, slug };
+    $('rsvp-card').hidden = false; $('form-card').hidden = true;
+    $('rsvp-title').textContent = '신청자 — ' + slug;
+    const box = $('rsvps'); box.innerHTML = '불러오는 중…';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      const { rsvps } = await api('rsvps', { event_id: eventId });
+      window._rsvps = rsvps;
+      if (!rsvps.length) { box.innerHTML = '<div class="hint">아직 신청자가 없어요.</div>'; return; }
+      box.innerHTML = '<div class="hint" style="margin-top:8px">총 ' + rsvps.length + '명</div>' + rsvps.map(r =>
+        '<div class="rsvp-item"><div><b>' + esc(r.name) + '</b> <span class="slugtag">' + esc(r.mbti) + '</span> ' +
+        '<span class="hint">' + new Date(r.created_at).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }) + '</span></div>' +
+        '<button class="btn-danger hand btn-sm" onclick="delRsvp(' + r.id + ")\">삭제</button></div>"
+      ).join('');
+    } catch (e) { box.innerHTML = '<div class="msg err">' + esc(e.message) + '</div>'; }
+  };
+  window.delRsvp = async function (id) {
+    if (!confirm('이 신청자를 삭제할까요?')) return;
+    try { await api('deleteRsvp', { id }); await manageRsvps(currentRsvpEvent.id, currentRsvpEvent.slug); }
+    catch (e) { alert(e.message); }
+  };
+  $('rsvp-close').addEventListener('click', () => { $('rsvp-card').hidden = true; });
+  $('csv-btn').addEventListener('click', () => {
+    const rows = window._rsvps || [];
+    const csv = '﻿이름,MBTI,신청시각\n' + rows.map(r =>
+      '"' + String(r.name).replace(/"/g,'""') + '","' + r.mbti + '","' + new Date(r.created_at).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'}) + '"'
+    ).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (currentRsvpEvent ? currentRsvpEvent.slug : 'rsvps') + '.csv';
+    a.click();
+  });
+
+  // auto-login if password stored
+  if (PW) { doLogin(); }
+</script>
+</body>
+</html>
