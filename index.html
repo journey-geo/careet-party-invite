@@ -262,6 +262,18 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="reassure-modal" hidden>
+  <div class="modal-card">
+    <div class="modal-emoji">🧤🥔</div>
+    <div class="modal-title hand">전여정이 잡아드릴게요</div>
+    <div class="modal-sub hand">벌레는 전여정이 책임지고 다 잡을게요. 그래도 싫으세요?</div>
+    <div class="modal-actions">
+      <button type="button" class="modal-btn cancel hand" id="reassure-no">그래도 싫어요</button>
+      <button type="button" class="modal-btn ok hand" id="reassure-yes">그럼 도전해볼게요</button>
+    </div>
+  </div>
+</div>
+
 <script>
   const AVATAR_COLORS = ['#c9974f','#a9743a','#8bc34a','#d9b06a','#b5843f','#7a5228'];
   let SLUG = '';
@@ -425,12 +437,23 @@
       modal.hidden = false;
     });
 
-    document.getElementById('confirm-cancel').addEventListener('click', function () { modal.hidden = true; });
+    const reassure = document.getElementById('reassure-modal');
+    function submitNow() { doSubmit(document.getElementById('name').value.trim(), selectedMbti); }
+
     document.getElementById('confirm-ok').addEventListener('click', function () {
-      modal.hidden = true;
-      doSubmit(document.getElementById('name').value.trim(), selectedMbti);
+      modal.hidden = true; submitNow();
+    });
+    document.getElementById('confirm-cancel').addEventListener('click', function () {
+      modal.hidden = true; reassure.hidden = false;
+    });
+    document.getElementById('reassure-yes').addEventListener('click', function () {
+      reassure.hidden = true; submitNow();
+    });
+    document.getElementById('reassure-no').addEventListener('click', function () {
+      reassure.hidden = true;
     });
     modal.addEventListener('click', function (e) { if (e.target === modal) modal.hidden = true; });
+    reassure.addEventListener('click', function (e) { if (e.target === reassure) reassure.hidden = true; });
   }
 
   init();
