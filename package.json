@@ -1,9 +1,9 @@
 {
-  "name": "careet-party-invite",
+  "name": "party-invite",
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "캐릿 오프라인 모임 초대장 (멀티 회차 · Vercel + Supabase)",
+  "description": "전여정의 파티 초대장 (멀티 회차 · Vercel + Supabase)",
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"
   }

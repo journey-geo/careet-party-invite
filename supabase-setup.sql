@@ -8,7 +8,7 @@ create table if not exists public.events (
   id             bigint generated always as identity primary key,
   slug           text not null unique,                 -- URL에 쓰이는 고유값 (예: potato-kimjang)
   title          text not null,                        -- 파티 제목
-  badge          text,                                 -- 상단 배지 (예: 제1회 캐릿 오프라인 모임)
+  badge          text,                                 -- 상단 배지 (예: 제1회 전여정 오프라인 모임)
   description    text,                                  -- 파티 설명 (선택)
   notice         text,                                  -- 주의사항 (줄바꿈으로 여러 줄, 선택)
   welcome        jsonb default '[]'::jsonb,             -- "이런 분을 환영해요" 항목 배열
@@ -47,8 +47,8 @@ values
   (
     'potato-kimjang',
     '감자 김장 파티',
-    '제1회 캐릿 오프라인 모임',
-    '["감자 김장하실 분.. (알레르기 없으셔야 함!)", "모여서 근황 얘기 나눌 분", "캐릿을 요즘 안 읽은 분도 OK~"]'::jsonb,
+    '제1회 전여정 오프라인 모임',
+    '["감자 김장하실 분.. (알레르기 없으셔야 함!)", "모여서 근황 얘기 나눌 분", "가볍게 놀러 오고 싶은 분도 OK~"]'::jsonb,
     '2026-07-10 19:30:00+09',
     '2026-07-09 23:59:59+09',   -- 신청 마감 (지나면 폼 닫히고 "신청 기간이 끝났어요" 표시)
     '7월 10일(금) 오후 7시 30분',
