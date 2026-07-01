@@ -101,6 +101,16 @@
   .brand { font-family: 'Gamja Flower', 'Apple SD Gothic Neo', cursive; font-size: 40px; color: var(--ink); letter-spacing: 1px; }
   .foot-note { color: var(--ink-soft); font-size: 16px; margin-top: 4px; }
 
+  .modal-overlay { position: fixed; inset: 0; background: rgba(74,54,32,0.55); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+  .modal-card { background: var(--cream-2); border: 2.5px solid var(--ink); border-radius: 24px; padding: 26px 24px; max-width: 360px; width: 100%; text-align: center; box-shadow: 4px 6px 0 var(--ink); animation: pop .2s ease; }
+  .modal-emoji { font-size: 42px; }
+  .modal-title { font-size: 24px; color: var(--potato-deep); margin-top: 8px; line-height: 1.3; }
+  .modal-sub { font-size: 16px; color: var(--ink-soft); margin-top: 10px; line-height: 1.55; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
+  .modal-btn { flex: 1; padding: 13px; border-radius: 14px; border: 2.5px solid var(--ink); font-size: 19px; cursor: pointer; }
+  .modal-btn.cancel { background: #fff; color: var(--ink); }
+  .modal-btn.ok { background: var(--potato-deep); color: #fff; }
+
   /* full-page states */
   .state { text-align: center; padding: 90px 20px; }
   .state .big { font-size: 60px; }
@@ -240,6 +250,18 @@
   </footer>
 </div>
 
+<div class="modal-overlay" id="confirm-modal" hidden>
+  <div class="modal-card">
+    <div class="modal-emoji">🐛🥔🪳</div>
+    <div class="modal-title hand">벌레가 많을 수 있어요. 괜찮아요?</div>
+    <div class="modal-sub hand">아기자기한 콩벌레부터 다리부자 돈벌레까지</div>
+    <div class="modal-actions">
+      <button type="button" class="modal-btn cancel hand" id="confirm-cancel">아니요</button>
+      <button type="button" class="modal-btn ok hand" id="confirm-ok">네, 괜찮아요!</button>
+    </div>
+  </div>
+</div>
+
 <script>
   const AVATAR_COLORS = ['#c9974f','#a9743a','#8bc34a','#d9b06a','#b5843f','#7a5228'];
   let SLUG = '';
@@ -375,16 +397,14 @@
     const form = document.getElementById('rsvp-form');
     const btn = document.getElementById('submit-btn');
     const msg = document.getElementById('form-msg');
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      if (!name) { msg.className = 'form-msg hand err'; msg.textContent = '이름을 입력해 주세요!'; return; }
-      if (!selectedMbti) { msg.className = 'form-msg hand err'; msg.textContent = 'MBTI를 골라 주세요!'; return; }
+    const modal = document.getElementById('confirm-modal');
+
+    async function doSubmit(name, mbti) {
       btn.disabled = true; msg.className = 'form-msg hand'; msg.textContent = '';
       try {
         const res = await fetch('/api/rsvps', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ slug: SLUG, name, mbti: selectedMbti }),
+          body: JSON.stringify({ slug: SLUG, name, mbti }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || '신청에 실패했어요.');
@@ -395,7 +415,22 @@
       } catch (err) {
         msg.className = 'form-msg hand err'; msg.textContent = err.message || '오류가 발생했어요.';
       } finally { btn.disabled = false; }
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      if (!name) { msg.className = 'form-msg hand err'; msg.textContent = '이름을 입력해 주세요!'; return; }
+      if (!selectedMbti) { msg.className = 'form-msg hand err'; msg.textContent = 'MBTI를 골라 주세요!'; return; }
+      modal.hidden = false;
     });
+
+    document.getElementById('confirm-cancel').addEventListener('click', function () { modal.hidden = true; });
+    document.getElementById('confirm-ok').addEventListener('click', function () {
+      modal.hidden = true;
+      doSubmit(document.getElementById('name').value.trim(), selectedMbti);
+    });
+    modal.addEventListener('click', function (e) { if (e.target === modal) modal.hidden = true; });
   }
 
   init();
