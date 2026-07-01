@@ -354,7 +354,7 @@
     countdownTimer = setInterval(tick, 1000);
   }
 
-  function initials(name) { return name.trim().slice(0, 2).toUpperCase(); }
+  function initials(name) { return name.trim().slice(-2).toUpperCase(); }
   function colorFor(name) { let sum = 0; for (const c of name) sum += c.charCodeAt(0); return AVATAR_COLORS[sum % AVATAR_COLORS.length]; }
 
   function renderGuests(rsvps) {
