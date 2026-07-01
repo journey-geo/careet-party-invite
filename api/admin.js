@@ -34,8 +34,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const pw = (req.headers['x-admin-password'] || '').toString();
-  if (pw !== ADMIN_PASSWORD) {
+  const pw = (req.headers['x-admin-password'] || '').toString().trim();
+  if (pw !== ADMIN_PASSWORD.trim()) {
     return res.status(401).json({ error: '비밀번호가 올바르지 않아요.' });
   }
 
