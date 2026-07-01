@@ -360,7 +360,7 @@
   function renderGuests(rsvps) {
     const list = document.getElementById('guest-list');
     document.getElementById('count-pill').textContent = rsvps.length + '명';
-    if (!rsvps.length) { list.innerHTML = '<div class="empty">아직 신청자가 없어요. 첫 번째로 김장하러 오실래요? 🥔</div>'; return; }
+    if (!rsvps.length) { list.innerHTML = '<div class="empty">아직 신청자가 없어요.</div>'; return; }
     list.innerHTML = '<div class="guest-grid">' + rsvps.map(g =>
       '<div class="guest-chip"><div class="avatar hand" style="background:' + colorFor(g.name) + '">' + initials(g.name) +
       '</div><div><div class="guest-name">' + escapeHtml(g.name) + '</div><div class="guest-mbti">' + escapeHtml(g.mbti) + '</div></div></div>'
@@ -420,7 +420,7 @@
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || '신청에 실패했어요.');
-        msg.className = 'form-msg hand ok'; msg.textContent = '신청 완료! 김장에서 만나요 🥔';
+        msg.className = 'form-msg hand ok'; msg.textContent = '신청 완료!';
         form.reset(); selectedMbti = '';
         mbtiGrid.querySelectorAll('.mbti-card').forEach(c => c.classList.remove('active'));
         await loadGuests();
