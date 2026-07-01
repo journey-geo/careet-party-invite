@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>캐릿 오프라인 모임 초대장 🥔</title>
+<meta property="og:title" content="캐릿 오프라인 모임에 초대합니다 🥔" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&family=Gamja+Flower&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --potato: #d3a15e; --potato-deep: #a9743a; --potato-dark: #7a5228;
+    --sprout: #8bc34a; --sprout-deep: #5f9e33;
+    --glove: #f3a7c6; --glove-line: #d97fa6; --boot: #7a5228;
+    --cream: #f6efe0; --cream-2: #fbf6ea;
+    --ink: #4a3620; --ink-soft: #7a6a55; --line: #ddd0b8; --highlight: #f2d79c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Jua', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+    color: var(--ink); background-color: var(--cream);
+    background-image: radial-gradient(var(--line) 1.4px, transparent 1.4px); background-size: 22px 22px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .hand { font-family: 'Gaegu', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; font-weight: 700; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 34px 18px 70px; }
+  [hidden] { display: none !important; }
+
+  .badge { display: block; width: fit-content; margin: 0 auto 6px; background: var(--ink); color: #fff; font-size: 18px; padding: 6px 20px; border-radius: 999px; letter-spacing: 1px; transform: rotate(-1.5deg); }
+  h1.title { color: var(--potato-deep); text-align: center; font-size: clamp(52px, 15vw, 86px); line-height: 1.05; margin: 4px 0 6px; text-shadow: 2px 3px 0 rgba(122,82,40,0.18); }
+
+  .stage { position: relative; text-align: center; margin-top: 6px; }
+  .mascot { width: min(260px, 62vw); height: auto; display: inline-block; filter: drop-shadow(0 12px 14px rgba(90,60,20,0.2)); }
+  .mascot .wave { transform-origin: 176px 98px; animation: wave 2.2s ease-in-out infinite; }
+  @keyframes wave { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-16deg)} 60%{transform:rotate(6deg)} }
+  .mascot .pupil { animation: roll 3.4s ease-in-out infinite; }
+  @keyframes roll { 0%,100%{transform:translate(0,0)} 20%{transform:translate(5px,-3px)} 40%{transform:translate(4px,4px)} 60%{transform:translate(-4px,4px)} 80%{transform:translate(-5px,-3px)} }
+
+  .bubble { position: relative; background: #fff; border: 2.5px solid var(--ink); border-radius: 22px; padding: 12px 16px; line-height: 1.5; }
+  .bubble::after { content: ""; position: absolute; width: 16px; height: 16px; background: #fff; border-right: 2.5px solid var(--ink); border-bottom: 2.5px solid var(--ink); }
+  .bubble-wait { width: fit-content; font-size: 20px; margin: 0 auto -6px; transform: rotate(-2deg); position: relative; z-index: 3; }
+  .bubble-wait::after { bottom: -9px; left: 30px; transform: rotate(45deg); }
+  .bubble-welcome { max-width: 430px; margin: 14px auto 0; font-size: 21px; text-align: left; padding: 18px 22px; transform: rotate(0.6deg); }
+  .bubble-welcome::after { top: -9px; right: 60px; transform: rotate(225deg); }
+  .bubble-welcome .head { color: var(--ink-soft); font-size: 19px; margin-bottom: 8px; }
+  .bubble-welcome ul { list-style: none; }
+  .bubble-welcome li { margin: 7px 0; }
+  .mark { background: linear-gradient(transparent 55%, var(--highlight) 55%); padding: 0 3px; border-radius: 3px; }
+  .sub-note { color: var(--ink-soft); font-size: 17px; }
+
+  .info { position: relative; background: var(--cream-2); border: 2.5px solid var(--ink); border-radius: 26px; padding: 26px 22px; margin-top: 30px; text-align: center; }
+  .info .row { font-size: 24px; margin: 12px 0; }
+  .info .k { color: var(--potato-deep); }
+  .info .note { display: block; font-size: 16px; color: var(--ink-soft); margin-top: 2px; }
+  .info .tomato-deco { position: absolute; font-size: 30px; }
+  .info .td1 { top: -16px; left: 18px; transform: rotate(-15deg); }
+  .info .td2 { bottom: -14px; right: 20px; transform: rotate(12deg); }
+
+  .countdown { display: flex; justify-content: center; gap: 10px; margin-top: 22px; }
+  .cd-box { min-width: 62px; padding: 10px 6px; border-radius: 16px; background: #fff; border: 2.5px solid var(--ink); text-align: center; }
+  .cd-num { font-size: 30px; color: var(--potato-deep); line-height: 1; }
+  .cd-lbl { font-size: 14px; color: var(--ink-soft); margin-top: 3px; }
+
+  .card { background: var(--cream-2); border: 2.5px solid var(--ink); border-radius: 26px; padding: 24px 22px; margin-top: 24px; }
+  .sec-title { font-size: 28px; color: var(--potato-deep); text-align: center; margin-bottom: 16px; }
+  .card p.desc { font-size: 19px; line-height: 1.7; color: var(--ink); text-align: center; }
+  .notice-list { list-style: none; }
+  .notice-list li { position: relative; padding-left: 24px; font-size: 18px; line-height: 1.75; }
+  .notice-list li::before { content: "🥔"; position: absolute; left: 0; font-size: 15px; }
+
+  .field { margin-bottom: 18px; }
+  .field label { display: block; font-size: 18px; color: var(--ink); margin-bottom: 8px; }
+  .field input { width: 100%; padding: 13px 15px; border-radius: 14px; font-size: 17px; font-family: inherit; background: #fff; border: 2.5px solid var(--line); color: var(--ink); transition: border-color .2s; }
+  .field input:focus { outline: none; border-color: var(--potato-deep); }
+
+  .mbti-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .mbti-card { padding: 12px 4px; border-radius: 14px; border: 2.5px solid var(--line); background: #fff; color: var(--ink); font-family: 'Gaegu', 'Apple SD Gothic Neo', sans-serif; font-weight: 700; font-size: 18px; cursor: pointer; text-align: center; transition: transform .08s, border-color .15s, background .15s, color .15s; }
+  .mbti-card:hover { border-color: var(--potato); }
+  .mbti-card.active { background: var(--potato-deep); border-color: var(--ink); color: #fff; transform: translateY(-1px); }
+
+  .submit-btn { width: 100%; padding: 15px; border: 2.5px solid var(--ink); border-radius: 16px; cursor: pointer; font-size: 24px; color: #fff; background: var(--potato-deep); box-shadow: 3px 4px 0 var(--ink); transition: transform .1s, box-shadow .1s; margin-top: 4px; }
+  .submit-btn:active { transform: translate(3px,4px); box-shadow: 0 0 0 var(--ink); }
+  .submit-btn:disabled { opacity: .55; cursor: not-allowed; }
+  .form-msg { margin-top: 12px; font-size: 18px; text-align: center; min-height: 22px; }
+  .form-msg.ok { color: var(--sprout-deep); }
+  .form-msg.err { color: #c0392b; }
+
+  .guest-head { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 4px; }
+  .count-pill { font-size: 16px; color: #fff; background: var(--potato-deep); padding: 3px 14px; border-radius: 999px; }
+  .guest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 14px; }
+  .guest-chip { display: flex; align-items: center; gap: 10px; padding: 11px 13px; border-radius: 16px; background: #fff; border: 2.5px solid var(--line); animation: pop .25s ease; }
+  @keyframes pop { from { opacity: 0; transform: scale(.9);} to { opacity:1; transform: scale(1);} }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; font-size: 18px; color: #fff; border: 2px solid var(--ink); }
+  .guest-name { font-size: 18px; line-height: 1.1; }
+  .guest-mbti { font-size: 14px; color: var(--ink-soft); }
+  .empty, .loading { color: var(--ink-soft); text-align: center; padding: 18px 0; font-size: 18px; }
+
+  footer { text-align: center; margin-top: 40px; }
+  .brand { font-family: 'Gamja Flower', 'Apple SD Gothic Neo', cursive; font-size: 40px; color: var(--ink); letter-spacing: 1px; }
+  .foot-note { color: var(--ink-soft); font-size: 16px; margin-top: 4px; }
+
+  /* full-page states */
+  .state { text-align: center; padding: 90px 20px; }
+  .state .big { font-size: 60px; }
+  .state .msg { font-size: 22px; margin-top: 14px; color: var(--ink); }
+  .state .sub { font-size: 17px; margin-top: 8px; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="loading-view">
+  <div class="state"><div class="big">🥔</div><div class="msg hand">불러오는 중…</div></div>
+</div>
+
+<div class="wrap" id="notfound-view" hidden>
+  <div class="state">
+    <div class="big">🥔❓</div>
+    <div class="msg hand" id="notfound-msg">감자가 길을 잃었어요</div>
+    <div class="sub hand">전여정에게 문의해주세요!</div>
+  </div>
+</div>
+
+<div class="wrap" id="party-view" hidden>
+  <span class="badge hand" id="badge" hidden></span>
+  <h1 class="title hand" id="title"></h1>
+
+  <div class="stage">
+    <div class="bubble bubble-wait hand">기다리고 있어요~ 👋</div>
+
+    <svg class="mascot" viewBox="0 0 240 250" xmlns="http://www.w3.org/2000/svg" aria-label="감자 마스코트">
+      <defs>
+        <radialGradient id="pbody" cx="40%" cy="32%" r="80%">
+          <stop offset="0%" stop-color="#e6bd82"/><stop offset="55%" stop-color="#d3a15e"/><stop offset="100%" stop-color="#a9743a"/>
+        </radialGradient>
+      </defs>
+      <g stroke="#5f9e33" stroke-width="2.5" fill="#8bc34a">
+        <path d="M120 58 q-4 -26 -22 -30 q4 22 22 30 z"/><path d="M120 58 q4 -22 20 -24 q-2 18 -20 24 z"/>
+      </g>
+      <rect x="116" y="54" width="8" height="12" rx="4" fill="#8bc34a"/>
+      <path d="M103 196 v30" stroke="#8a5a2b" stroke-width="15" fill="none" stroke-linecap="round"/>
+      <path d="M137 196 v30" stroke="#8a5a2b" stroke-width="15" fill="none" stroke-linecap="round"/>
+      <path d="M103 196 v30" stroke="#c58f4f" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <path d="M137 196 v30" stroke="#c58f4f" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <ellipse cx="98" cy="234" rx="17" ry="11" fill="#7a5228" stroke="#4a3620" stroke-width="2.5"/>
+      <ellipse cx="142" cy="234" rx="17" ry="11" fill="#7a5228" stroke="#4a3620" stroke-width="2.5"/>
+      <path d="M120 60 C176 56 208 96 202 142 C198 192 162 216 120 214 C76 216 40 190 39 142 C37 98 66 62 120 60 Z" fill="url(#pbody)" stroke="#8a5a2b" stroke-width="2.5"/>
+      <ellipse cx="88" cy="104" rx="26" ry="17" fill="#ffffff" opacity="0.16"/>
+      <g fill="#8a5a2b" opacity="0.5">
+        <ellipse cx="62" cy="150" rx="4" ry="2.4" transform="rotate(20 62 150)"/>
+        <ellipse cx="178" cy="120" rx="4.5" ry="2.6" transform="rotate(-25 178 120)"/>
+        <ellipse cx="160" cy="185" rx="3.6" ry="2.2" transform="rotate(15 160 185)"/>
+        <ellipse cx="80" cy="188" rx="3.4" ry="2" transform="rotate(-10 80 188)"/>
+        <circle cx="120" cy="92" r="2.2"/>
+      </g>
+      <path d="M48 152 q-6 30 6 46" stroke="#8a5a2b" stroke-width="17" fill="none" stroke-linecap="round"/>
+      <path d="M48 152 q-6 30 6 46" stroke="#c58f4f" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <circle cx="54" cy="202" r="15" fill="#f3a7c6" stroke="#d97fa6" stroke-width="2.5"/>
+      <g class="wave">
+        <path d="M190 150 q22 -20 18 -48" stroke="#8a5a2b" stroke-width="17" fill="none" stroke-linecap="round"/>
+        <path d="M190 150 q22 -20 18 -48" stroke="#c58f4f" stroke-width="12" fill="none" stroke-linecap="round"/>
+        <circle cx="206" cy="96" r="16" fill="#f3a7c6" stroke="#d97fa6" stroke-width="2.5"/>
+      </g>
+      <ellipse cx="101" cy="128" rx="15" ry="18" fill="#fff" stroke="#4a3620" stroke-width="2"/>
+      <ellipse cx="141" cy="128" rx="15" ry="18" fill="#fff" stroke="#4a3620" stroke-width="2"/>
+      <g class="pupil"><circle cx="104" cy="132" r="7" fill="#4a3620"/><circle cx="106" cy="129" r="2.2" fill="#fff"/></g>
+      <g class="pupil"><circle cx="144" cy="132" r="7" fill="#4a3620"/><circle cx="146" cy="129" r="2.2" fill="#fff"/></g>
+      <circle cx="86" cy="152" r="9" fill="#e79b6b" opacity="0.6"/>
+      <circle cx="156" cy="152" r="9" fill="#e79b6b" opacity="0.6"/>
+      <path d="M111 152 q10 10 20 0" stroke="#4a3620" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <div class="bubble bubble-welcome hand" id="welcome-bubble" hidden>
+      <div class="head">이런 분을 환영해요…</div>
+      <ul id="welcome-list"></ul>
+    </div>
+  </div>
+
+  <section class="card" id="desc-card" hidden>
+    <div class="sec-title hand">파티 소개 🥔</div>
+    <p class="desc" id="desc-text"></p>
+  </section>
+
+  <div class="info">
+    <span class="tomato-deco td1">🥔</span>
+    <span class="tomato-deco td2">🥔</span>
+    <div class="row" id="row-date" hidden><span class="k hand">일시</span> · <span id="date-text"></span></div>
+    <div class="row" id="row-loc" hidden><span class="k hand">장소</span> · <span id="loc-text"></span><span class="note" id="loc-note" hidden></span></div>
+    <div class="row" id="row-fee" hidden><span class="k hand">참가비</span> · <span id="fee-text"></span></div>
+    <div class="countdown hand" id="countdown"></div>
+  </div>
+
+  <section class="card" id="notice-card" hidden>
+    <div class="sec-title hand">주의사항 ⚠️</div>
+    <ul class="notice-list" id="notice-list"></ul>
+  </section>
+
+  <section class="card" id="signup-card">
+    <div class="sec-title hand">참가 신청 🙋</div>
+    <form id="rsvp-form" autocomplete="off">
+      <div class="field">
+        <label for="name">이름</label>
+        <input type="text" id="name" name="name" placeholder="이름을 적어주세요" maxlength="40" required />
+      </div>
+      <div class="field">
+        <label>MBTI</label>
+        <div class="mbti-grid" id="mbti-grid">
+          <button type="button" class="mbti-card">INTJ</button><button type="button" class="mbti-card">INTP</button>
+          <button type="button" class="mbti-card">ENTJ</button><button type="button" class="mbti-card">ENTP</button>
+          <button type="button" class="mbti-card">INFJ</button><button type="button" class="mbti-card">INFP</button>
+          <button type="button" class="mbti-card">ENFJ</button><button type="button" class="mbti-card">ENFP</button>
+          <button type="button" class="mbti-card">ISTJ</button><button type="button" class="mbti-card">ISFJ</button>
+          <button type="button" class="mbti-card">ESTJ</button><button type="button" class="mbti-card">ESFJ</button>
+          <button type="button" class="mbti-card">ISTP</button><button type="button" class="mbti-card">ISFP</button>
+          <button type="button" class="mbti-card">ESTP</button><button type="button" class="mbti-card">ESFP</button>
+        </div>
+      </div>
+      <button type="submit" class="submit-btn hand" id="submit-btn">신청하기</button>
+      <div class="form-msg hand" id="form-msg"></div>
+    </form>
+  </section>
+
+  <section class="card" id="closed-card" hidden>
+    <div class="sec-title hand">참가 신청 🙋</div>
+    <div class="empty hand" style="font-size:22px">신청 기간이 끝났어요 🥔</div>
+  </section>
+
+  <section class="card">
+    <div class="guest-head">
+      <div class="sec-title hand" style="margin-bottom:0">신청한 사람</div>
+      <span class="count-pill hand" id="count-pill">0명</span>
+    </div>
+    <div id="guest-list"><div class="loading">불러오는 중…</div></div>
+  </section>
+
+  <footer>
+    <div class="brand" id="brand">journey</div>
+    <div class="foot-note hand" id="contact"></div>
+  </footer>
+</div>
+
+<script>
+  const AVATAR_COLORS = ['#c9974f','#a9743a','#8bc34a','#d9b06a','#b5843f','#7a5228'];
+  let SLUG = '';
+  let countdownTimer = null;
+
+  function getSlug() {
+    const m = location.pathname.match(/^\/e\/([^\/?#]+)/);
+    if (m) return decodeURIComponent(m[1]);
+    const q = new URLSearchParams(location.search).get('event');
+    return q ? q.trim() : '';
+  }
+  function show(id) { document.getElementById(id).hidden = false; }
+  function hide(id) { document.getElementById(id).hidden = true; }
+  function setText(id, val) { document.getElementById(id).textContent = val; }
+  function escapeHtml(str) { return String(str).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+  function renderWelcomeItem(text, isFirst) {
+    const m = String(text).match(/^(.*?)\s*(\([^)]*\))\s*$/);
+    let main = text, note = '';
+    if (m) { main = m[1].trim(); note = m[2]; }
+    const mainHtml = isFirst ? '<span class="mark">' + escapeHtml(main) + '</span>' : escapeHtml(main);
+    return '<li>' + mainHtml + (note ? ' <span class="sub-note">' + escapeHtml(note) + '</span>' : '') + '</li>';
+  }
+
+  function renderEvent(ev) {
+    document.title = (ev.title || '초대장') + ' 🥔';
+    if (ev.badge) { setText('badge', ev.badge); show('badge'); }
+    setText('title', ev.title || '');
+
+    const welcome = Array.isArray(ev.welcome) ? ev.welcome : [];
+    if (welcome.length) {
+      document.getElementById('welcome-list').innerHTML = welcome.map((w, i) => renderWelcomeItem(w, i === 0)).join('');
+      show('welcome-bubble');
+    }
+    if (ev.description) { setText('desc-text', ev.description); show('desc-card'); }
+
+    if (ev.date_text) { setText('date-text', ev.date_text); show('row-date'); }
+    if (ev.location) {
+      setText('loc-text', ev.location); show('row-loc');
+      if (ev.location_note) { setText('loc-note', ev.location_note); show('loc-note'); }
+    }
+    if (ev.fee) { setText('fee-text', ev.fee); show('row-fee'); }
+
+    if (ev.notice) {
+      const items = String(ev.notice).split('\n').map(s => s.trim()).filter(Boolean);
+      if (items.length) {
+        document.getElementById('notice-list').innerHTML = items.map(s => '<li>' + escapeHtml(s) + '</li>').join('');
+        show('notice-card');
+      }
+    }
+
+    setText('brand', ev.brand || 'journey');
+    setText('contact', ev.contact || '전여정에게 문의해주세요!');
+
+    startCountdown(ev.starts_at);
+
+    const deadline = ev.deadline || ev.starts_at;
+    if (deadline && (new Date(deadline) - new Date()) <= 0) {
+      hide('signup-card'); show('closed-card');
+    }
+
+    hide('loading-view'); show('party-view');
+  }
+
+  function startCountdown(startsAt) {
+    const el = document.getElementById('countdown');
+    if (!startsAt) { el.hidden = true; return; }
+    const target = new Date(startsAt);
+    if (isNaN(target)) { el.hidden = true; return; }
+    function tick() {
+      const diff = target - new Date();
+      if (diff <= 0) { el.innerHTML = '<div class="cd-box"><div class="cd-num">D-DAY</div><div class="cd-lbl">오늘이에요!</div></div>'; clearInterval(countdownTimer); return; }
+      const d = Math.floor(diff/864e5), h = Math.floor(diff%864e5/36e5), m = Math.floor(diff%36e5/6e4), s = Math.floor(diff%6e4/1e3);
+      const box = (n,l) => '<div class="cd-box"><div class="cd-num">' + String(n).padStart(2,'0') + '</div><div class="cd-lbl">' + l + '</div></div>';
+      el.innerHTML = box(d,'일') + box(h,'시') + box(m,'분') + box(s,'초');
+    }
+    tick();
+    countdownTimer = setInterval(tick, 1000);
+  }
+
+  function initials(name) { return name.trim().slice(0, 2).toUpperCase(); }
+  function colorFor(name) { let sum = 0; for (const c of name) sum += c.charCodeAt(0); return AVATAR_COLORS[sum % AVATAR_COLORS.length]; }
+
+  function renderGuests(rsvps) {
+    const list = document.getElementById('guest-list');
+    document.getElementById('count-pill').textContent = rsvps.length + '명';
+    if (!rsvps.length) { list.innerHTML = '<div class="empty">아직 신청자가 없어요. 첫 번째로 김장하러 오실래요? 🥔</div>'; return; }
+    list.innerHTML = '<div class="guest-grid">' + rsvps.map(g =>
+      '<div class="guest-chip"><div class="avatar hand" style="background:' + colorFor(g.name) + '">' + initials(g.name) +
+      '</div><div><div class="guest-name">' + escapeHtml(g.name) + '</div><div class="guest-mbti">' + escapeHtml(g.mbti) + '</div></div></div>'
+    ).join('') + '</div>';
+  }
+
+  async function loadGuests() {
+    try {
+      const res = await fetch('/api/rsvps?slug=' + encodeURIComponent(SLUG));
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      renderGuests(data.rsvps || []);
+    } catch {
+      document.getElementById('guest-list').innerHTML = '<div class="empty">리스트를 불러오지 못했어요. 잠시 후 새로고침 해주세요.</div>';
+    }
+  }
+
+  async function init() {
+    SLUG = getSlug();
+    if (!SLUG) { hide('loading-view'); show('notfound-view'); return; }
+    try {
+      const res = await fetch('/api/events?slug=' + encodeURIComponent(SLUG));
+      if (res.status === 404) { hide('loading-view'); show('notfound-view'); return; }
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      renderEvent(data.event);
+      wireForm();
+      loadGuests();
+    } catch {
+      hide('loading-view');
+      show('notfound-view');
+    }
+  }
+
+  function wireForm() {
+    let selectedMbti = '';
+    const mbtiGrid = document.getElementById('mbti-grid');
+    mbtiGrid.addEventListener('click', function (e) {
+      const card = e.target.closest('.mbti-card');
+      if (!card) return;
+      mbtiGrid.querySelectorAll('.mbti-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      selectedMbti = card.textContent.trim();
+    });
+
+    const form = document.getElementById('rsvp-form');
+    const btn = document.getElementById('submit-btn');
+    const msg = document.getElementById('form-msg');
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      if (!name) { msg.className = 'form-msg hand err'; msg.textContent = '이름을 입력해 주세요!'; return; }
+      if (!selectedMbti) { msg.className = 'form-msg hand err'; msg.textContent = 'MBTI를 골라 주세요!'; return; }
+      btn.disabled = true; msg.className = 'form-msg hand'; msg.textContent = '';
+      try {
+        const res = await fetch('/api/rsvps', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug: SLUG, name, mbti: selectedMbti }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '신청에 실패했어요.');
+        msg.className = 'form-msg hand ok'; msg.textContent = '신청 완료! 김장에서 만나요 🥔';
+        form.reset(); selectedMbti = '';
+        mbtiGrid.querySelectorAll('.mbti-card').forEach(c => c.classList.remove('active'));
+        await loadGuests();
+      } catch (err) {
+        msg.className = 'form-msg hand err'; msg.textContent = err.message || '오류가 발생했어요.';
+      } finally { btn.disabled = false; }
+    });
+  }
+
+  init();
+</script>
+</body>
+</html>
